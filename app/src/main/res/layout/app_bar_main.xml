@@ -30,6 +30,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:backgroundTint="#E91E63"
         android:tint="#FFFEFE"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:onClick="floatingButtonClicked"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
