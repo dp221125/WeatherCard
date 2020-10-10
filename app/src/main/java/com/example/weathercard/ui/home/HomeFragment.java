@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.weathercard.APIData.Weather;
 import com.example.weathercard.MainDataAdapter;
 import com.example.weathercard.R;
 import com.example.weathercard.network.APIRequest;
@@ -66,8 +67,9 @@ public class HomeFragment extends Fragment {
             public void onResponse(Object response) {
                 // Add success logic here
 //                Log.e(response.toString());
+                Weather weather = (Weather) response;
                 System.out.println("성공");
-                System.out.println(response);
+                System.out.println(weather.getLocation().getRegion());
             }
         }, new Response.ErrorListener() {
             @Override

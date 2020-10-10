@@ -8,6 +8,8 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.example.weathercard.APIData.Weather;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonSyntaxException;
 
 import net.oauth.OAuth;
@@ -89,6 +91,15 @@ public class APIRequest<T> extends JsonRequest<T> {
 
     private T parseResponse(String jsonObject) throws JSONException {
         JSONObject jsonObj = new JSONObject(jsonObject.toString());
+        System.out.println(jsonObj);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Weather weather = mapper.readValue(jsonObj.toString(), Weather.class);
+            return  (T) weather;
+        } catch (IOException e) {
+            Log.e("parseResponse 실패 ", ":" + e);
+            e.printStackTrace();
+        }
         return (T) jsonObj;
 
     }
