@@ -1,6 +1,7 @@
 package com.example.weathercard.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.weathercard.MainDataAdapter;
 import com.example.weathercard.R;
+import com.example.weathercard.network.APIRequest;
+import com.example.weathercard.network.RequestManager;
 
 import java.util.ArrayList;
 
@@ -47,5 +53,30 @@ public class HomeFragment extends Fragment {
         mainRecyclerView.setAdapter(mainDataAdapter);
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        System.out.println("CALL");
+        RequestManager requestManager = RequestManager.getInstance(this.getActivity());
+        APIRequest request = new APIRequest(Request.Method.GET, null, null, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                // Add success logic here
+//                Log.e(response.toString());
+                System.out.println("성공");
+                System.out.println(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Add error handling here
+                Log.e("실패 ", ":" + error);
+                System.out.println("실패");
+            }
+        });
+        requestManager.addToRequestQueue(request);
     }
 }
