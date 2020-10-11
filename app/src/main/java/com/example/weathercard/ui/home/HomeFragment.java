@@ -96,6 +96,6 @@ public class HomeFragment extends Fragment {
                 Log.e("fail", t.toString());
             }
         });
-//        lat=37.372&lon=-122.038
+
     }
 }
