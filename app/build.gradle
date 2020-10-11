@@ -4,6 +4,11 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.example.weathercard"
         minSdkVersion 29
@@ -34,12 +39,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    compile 'com.github.blindsidenetworks:oauth:master-SNAPSHOT'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.7'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.7'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    compile 'se.akerfeldt:okhttp-signpost:1.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile 'oauth.signpost:signpost-core:1.2.1.2'
+
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 }
