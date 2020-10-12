@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( (weather, throwable) -> {
+                    System.out.println(weather.getCurrentObservation());
                     if (throwable == null) {
                         mainDataAdapter.setWeather(weather);
                         mainDataAdapter.notifyDataSetChanged();

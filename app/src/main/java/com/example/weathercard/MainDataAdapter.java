@@ -26,10 +26,12 @@ public class MainDataAdapter extends RecyclerView.Adapter<MainDataAdapter.ViewHo
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView cityNameTextView;
+        TextView weatherStringTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            cityNameTextView = itemView.findViewById(R.id.cityNameTextView) ;
+            cityNameTextView = itemView.findViewById(R.id.cityNameTextView);
+            weatherStringTextView = itemView.findViewById(R.id.weatherStringTextView);
         }
     }
 
@@ -46,7 +48,15 @@ public class MainDataAdapter extends RecyclerView.Adapter<MainDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MainDataAdapter.ViewHolder holder, int position) {
         if (weatherData.getLocation() != null) {
-            holder.cityNameTextView.setText(weatherData.getLocation().getRegion());
+            holder.cityNameTextView.setText(weatherData.getLocation().getCity());
+            if (position == 0 ) {
+                if (weatherData.getCurrentObservation() != null) {
+                    holder.weatherStringTextView.setText(weatherData.getCurrentObservation().getCondition().getText());
+                }
+            } else {
+                holder.weatherStringTextView.setText(weatherData.getForecasts().get(position - 1).getText());
+            }
+
         }
     }
 

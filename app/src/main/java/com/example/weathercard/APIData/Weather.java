@@ -1,11 +1,14 @@
 package com.example.weathercard.APIData;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Weather {
 
     private Location location;
+    @SerializedName(value = "current_observation")
     private CurrentObservation currentObservation;
     private List<Forecast> forecasts = new ArrayList<Forecast>();
 
