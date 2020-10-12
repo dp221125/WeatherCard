@@ -52,7 +52,7 @@ public class HomeViewModel extends ViewModel {
                    .build();
 
            WeatherAPIProvider provider = retrofit.create(WeatherAPIProvider.class);
-           provider.getData("37.372", "-122.038", "json").enqueue(new Callback<Weather>() {
+           provider.getData("35.9084351", "128.7990138", "json", "c").enqueue(new Callback<Weather>() {
                @Override
                public void onResponse(Call<Weather> call, Response<Weather> response) {
                    if (response.isSuccessful() && response.body() != null ) {

@@ -15,6 +15,7 @@ public interface WeatherAPIProvider {
     })
     @GET("/forecastrss")
     Call<Weather> getData(@Query("lat") String lat,
-                                     @Query("lon") String lon,
-                                     @Query("format") String format);
+                          @Query("lon") String lon,
+                          @Query("format") String format,
+                          @Query("u") String unit);
 }
