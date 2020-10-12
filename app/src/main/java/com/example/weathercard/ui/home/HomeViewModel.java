@@ -55,7 +55,7 @@ public class HomeViewModel extends ViewModel {
            provider.getData("37.372", "-122.038", "json").enqueue(new Callback<Weather>() {
                @Override
                public void onResponse(Call<Weather> call, Response<Weather> response) {
-                   if (response.isSuccessful()) {
+                   if (response.isSuccessful() && response.body() != null ) {
                        Weather weather = response.body();
                        emitter.onSuccess(weather);
                    } else {

@@ -13,13 +13,13 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weathercard.APIData.Weather;
 import com.example.weathercard.MainDataAdapter;
 import com.example.weathercard.R;
 
-import java.util.ArrayList;
-
-
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -28,6 +28,8 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private RecyclerView mainRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private Weather weather;
+    private MainDataAdapter mainDataAdapter;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -38,10 +40,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
 
-        ArrayList<String> list = new ArrayList<>();
-        for (int i=0; i<100; i++) {
-            list.add(String.format("TEXT %d", i)) ;
-        }
+        weather = new Weather();
 
         mainRecyclerView = (RecyclerView) root.findViewById(R.id.mainRecyclerView);
         mainRecyclerView.setHasFixedSize(true);
@@ -49,7 +48,7 @@ public class HomeFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         mainRecyclerView.setLayoutManager(layoutManager);
 
-        MainDataAdapter mainDataAdapter = new MainDataAdapter(list);
+        mainDataAdapter = new MainDataAdapter(weather);
         mainRecyclerView.setAdapter(mainDataAdapter);
 
         return root;
@@ -62,10 +61,14 @@ public class HomeFragment extends Fragment {
         System.out.println("CALL");
 
         disposables.add( homeViewModel.fetchData()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( (weather, throwable) -> {
                     if (throwable == null) {
-                        System.out.println(weather.getLocation().getCity());
+                        mainDataAdapter.setWeather(weather);
+                        mainDataAdapter.notifyDataSetChanged();
                     } else {
+                        Log.e("fragment fetchData Error", throwable.toString());
                         Toast toast = Toast.makeText(getActivity(), throwable.toString(), LENGTH_SHORT);
                         toast.show();
                     }

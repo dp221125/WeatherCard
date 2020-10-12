@@ -9,23 +9,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.weathercard.APIData.Weather;
 
 public class MainDataAdapter extends RecyclerView.Adapter<MainDataAdapter.ViewHolder> {
 
-    private ArrayList<String> weatherData = null;
+    private Weather weatherData = null;
 
-    public MainDataAdapter(ArrayList<String> list) {
-        this.weatherData = list;
+    public MainDataAdapter(Weather weather) {
+        this.weatherData = weather;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weatherData = weather;
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView1;
+        TextView cityNameTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            textView1 = itemView.findViewById(R.id.cityNameTextView) ;
+            cityNameTextView = itemView.findViewById(R.id.cityNameTextView) ;
         }
     }
 
@@ -41,12 +45,18 @@ public class MainDataAdapter extends RecyclerView.Adapter<MainDataAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MainDataAdapter.ViewHolder holder, int position) {
-        String text = weatherData.get(position);
-        holder.textView1.setText(text);
+        if (weatherData.getLocation() != null) {
+            holder.cityNameTextView.setText(weatherData.getLocation().getRegion());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return weatherData.size();
+        if (weatherData.getForecasts() != null) {
+            return weatherData.getForecasts().size() + 1;
+        } else {
+            return 0;
+        }
+
     }
 }
