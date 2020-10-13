@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def apikeyPropertiesFile = rootProject.file("apikey.properties");
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -18,10 +22,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "APP_ID", "\"5pIWechk\""
+        buildConfigField ("String", "APP_ID", apikeyProperties['APP_ID'])
         buildConfigField "String", "BASE_URL", "\"https://weather-ydn-yql.media.yahoo.com/forecastrss/\""
-        buildConfigField "String", "CONSUMER_KEY", "\"dj0yJmk9bTYzMDA5WU1GREEzJmQ9WVdrOU5YQkpWMlZqYUdzbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWI3\""
-        buildConfigField "String", "CONSUMER_SECRET", "\"d9be33bf0bf6fd581a87f645adf1c55f98c00821\""
+        buildConfigField ("String", "CONSUMER_KEY", apikeyProperties['CONSUMER_KEY'])
+        buildConfigField ("String", "CONSUMER_SECRET", apikeyProperties['CONSUMER_SECRET'])
     }
 
     buildTypes {
