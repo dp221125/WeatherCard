@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.weathercard.APIData.Weather;
+import com.example.weathercard.BuildConfig;
 import com.example.weathercard.network.WeatherAPIProvider;
 
 import io.reactivex.rxjava3.core.Single;
@@ -21,32 +22,17 @@ import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
 public class HomeViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-
-    final String CONSUMER_KEY = "dj0yJmk9bTYzMDA5WU1GREEzJmQ9WVdrOU5YQkpWMlZqYUdzbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PWI3";
-    final String CONSUMER_SECRET = "d9be33bf0bf6fd581a87f645adf1c55f98c00821";
-    final String baseUrl = "https://weather-ydn-yql.media.yahoo.com/forecastrss/";
-
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
-
     public Single<Weather> fetchData() {
        return Single.create( emitter ->  {
 
-           OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+           OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(BuildConfig.CONSUMER_KEY, BuildConfig.CONSUMER_SECRET);
 
            OkHttpClient client = new OkHttpClient.Builder()
                    .addInterceptor(new SigningInterceptor(consumer))
                    .build();
 
            Retrofit retrofit = new Retrofit.Builder()
-                   .baseUrl(baseUrl)
+                   .baseUrl(BuildConfig.BASE_URL)
                    .addConverterFactory(GsonConverterFactory.create())
                    .client(client)
                    .build();
