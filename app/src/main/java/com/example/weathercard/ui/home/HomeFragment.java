@@ -1,5 +1,7 @@
 package com.example.weathercard.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,11 +69,13 @@ public class HomeFragment extends Fragment {
 
         System.out.println("CALL");
 
-        disposables.add( homeViewModel.fetchData()
+        disposables.add( homeViewModel.fetchData(getUnit())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe( (weather, throwable) -> {
                     if (throwable == null) {
+                        Log.d("Unit",getUnit());
+                        Log.d("Success", String.valueOf(weather.getCurrentObservation().getCondition().getTemperature()));
                         mainDataAdapter.setWeather(weather);
                         mainDataAdapter.notifyDataSetChanged();
                     } else {
@@ -89,6 +93,13 @@ public class HomeFragment extends Fragment {
         if(!disposables.isDisposed()){
             disposables.dispose();
         }
+    }
+
+    private String getUnit() {
+        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String value = prefs.getString("unitSwitch", "c");
+
+        return value;
     }
 
 
