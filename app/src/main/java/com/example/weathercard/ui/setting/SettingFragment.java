@@ -39,7 +39,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences prefs = getActivity().getSharedPreferences("TempPref", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
 
                 if(isChecked) {
@@ -64,10 +64,10 @@ public class SettingFragment extends Fragment {
     }
 
     private boolean getStatus() {
-        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences("TempPref", Context.MODE_PRIVATE);
         String value = prefs.getString("unitSwitch", "c");
         Log.d("on",value);
-        if (value == "c") {
+        if (value.equals("c")) {
             return false;
         } else {
             return true;

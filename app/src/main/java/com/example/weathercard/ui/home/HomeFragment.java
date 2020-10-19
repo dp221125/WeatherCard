@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
     }
 
     private String getUnit() {
-        SharedPreferences prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences("TempPref", Context.MODE_PRIVATE);
         String value = prefs.getString("unitSwitch", "c");
 
         return value;
