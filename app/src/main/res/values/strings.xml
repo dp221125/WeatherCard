@@ -12,6 +12,9 @@
     <string name="menu_setting">Setting</string>
 
     //fragment_home.xml
+    <string name="defaultHighLow">20-11°C</string>
+    <string name="defaultDate">Jul 18</string>
+    <string name="defaultWeekDay">Monday</string>
     <string name="defaultText">기본텍스트</string>
     <string name="defaultTemp">0°C</string>
     <string name="defaultWeather">맑음</string>

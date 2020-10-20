@@ -2,6 +2,7 @@ package com.example.weathercard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weathercard.APIData.Weather;
+
+import java.util.Date;
+import java.util.Locale;
 
 public class MainDataAdapter extends RecyclerView.Adapter {
 
@@ -32,13 +36,17 @@ public class MainDataAdapter extends RecyclerView.Adapter {
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     public class ForecastsViewHolder extends RecyclerView.ViewHolder {
-        TextView cityNameTextView;
-        TextView weatherStringTextView;
+        TextView weekTextView;
+        TextView dateTextView;
+        TextView tempTextView;
+        ImageView weatherImageView;
 
         ForecastsViewHolder(View itemView) {
             super(itemView);
-            cityNameTextView = itemView.findViewById(R.id.cityNameTextView);
-            weatherStringTextView = itemView.findViewById(R.id.weatherStringTextView);
+            weekTextView = itemView.findViewById(R.id.weekdayTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+            tempTextView = itemView.findViewById(R.id.minMaxTempTextView);
+            weatherImageView = itemView.findViewById(R.id.weatherImageView);
         }
     }
 
@@ -94,7 +102,33 @@ public class MainDataAdapter extends RecyclerView.Adapter {
             }
 
         } else {
+//            Log.d("position", String.valueOf(position));
+             if (weatherData.getForecasts() != null && position > 0) {
 
+                 if (position == 1) {
+                     ((ForecastsViewHolder) holder).weekTextView.setText("Today");
+                 } else {
+                     ((ForecastsViewHolder) holder).weekTextView.setText(weatherData.getForecasts().get(position - 1).getDay());
+                 }
+
+                 if (getUnit().equals("c")) {
+                     ((ForecastsViewHolder) holder).tempTextView.setText(String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()) + "-" + weatherData.getForecasts().get(position - 1).getLow() + "°C");
+                 } else {
+                     ((ForecastsViewHolder) holder).tempTextView.setText(String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()) + "-" + weatherData.getForecasts().get(position - 1).getLow() + "°F");
+                 }
+
+                 String imageURL = String.format("http://l.yimg.com/a/i/us/we/52/%s.gif", weatherData.getForecasts().get(position - 1).getCode());
+                 Log.d("imageURL", imageURL);
+
+                 ImageAdapter imageAdapter = new ImageAdapter();
+                 imageAdapter.loadImage(((ForecastsViewHolder) holder).weatherImageView, imageURL);
+
+                 long dv = Long.valueOf(weatherData.getForecasts().get(position -1).getDate())*1000;
+                 Date df = new java.util.Date(dv);
+                 String vv = new SimpleDateFormat("MMM dd일", Locale.KOREA).format(df);
+
+                 ((ForecastsViewHolder)holder).dateTextView.setText(vv);
+             }
         }
     }
 
