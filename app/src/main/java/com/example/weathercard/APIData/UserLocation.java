@@ -1,6 +1,6 @@
 package com.example.weathercard.APIData;
 
-public class Location {
+public class UserLocation {
     private long woeid;
     private String city;
     private String region;

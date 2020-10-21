@@ -7,13 +7,13 @@ import java.util.List;
 
 public class Weather {
 
-    private Location location;
+    private UserLocation location;
     @SerializedName(value = "current_observation")
     private CurrentObservation currentObservation;
     private List<Forecast> forecasts = new ArrayList<Forecast>();
 
-    public Location getLocation() { return location; }
-    public void setLocation(Location value) { this.location = value; }
+    public UserLocation getLocation() { return location; }
+    public void setLocation(UserLocation value) { this.location = value; }
 
     public CurrentObservation getCurrentObservation() { return currentObservation; }
     public void setCurrentObservation(CurrentObservation value) { this.currentObservation = value; }

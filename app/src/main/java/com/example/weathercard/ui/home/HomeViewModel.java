@@ -1,13 +1,13 @@
 package com.example.weathercard.ui.home;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.weathercard.APIData.UserLocation;
+import com.example.weathercard.APIData.UserLocation;
 import com.example.weathercard.APIData.Weather;
 import com.example.weathercard.BuildConfig;
 import com.example.weathercard.network.WeatherAPIProvider;
@@ -22,9 +22,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 import se.akerfeldt.okhttp.signpost.SigningInterceptor;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 public class HomeViewModel extends ViewModel {
 
-    public Single<Weather> fetchData(String unit) {
+    public Single<Weather> fetchData(Location userLocation, String unit) {
        return Single.create( emitter ->  {
 
            OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(BuildConfig.CONSUMER_KEY, BuildConfig.CONSUMER_SECRET);
@@ -40,7 +42,10 @@ public class HomeViewModel extends ViewModel {
                    .build();
 
            WeatherAPIProvider provider = retrofit.create(WeatherAPIProvider.class);
-           provider.getData("35.9084351", "128.7990138", "json", unit).enqueue(new Callback<Weather>() {
+           Log.d("lat", String.valueOf(userLocation.getLatitude()));
+           Log.d("long", String.valueOf(userLocation.getLongitude()));
+
+           provider.getData(String.valueOf(userLocation.getLatitude()), String.valueOf(userLocation.getLongitude()), "json", unit).enqueue(new Callback<Weather>() {
                @Override
                public void onResponse(Call<Weather> call, Response<Weather> response) {
                    if (response.isSuccessful() && response.body() != null ) {
