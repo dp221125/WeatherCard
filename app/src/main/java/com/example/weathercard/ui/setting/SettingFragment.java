@@ -1,8 +1,7 @@
 package com.example.weathercard.ui.setting;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -14,15 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 
 import com.example.weathercard.R;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class SettingFragment extends Fragment {
-
-    private SettingViewModel mViewModel;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -33,6 +32,17 @@ public class SettingFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        Button btn = root.findViewById(R.id.showLicenseBtn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), OssLicensesMenuActivity.class));
+            }
+        });
+
 
         SwitchMaterial unitSwitch = root.findViewById(R.id.unitSwitch);
         unitSwitch.setChecked(getStatus());
@@ -55,15 +65,11 @@ public class SettingFragment extends Fragment {
             }
         });
 
+
+
         hiddenFloatingBtn();
 
         return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(SettingViewModel.class);
     }
 
     private boolean getStatus() {
