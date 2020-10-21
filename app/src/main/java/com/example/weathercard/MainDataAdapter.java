@@ -25,6 +25,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
 
     private static int TYPE_Today = 1;
     private static int TYPE_Forecast = 2;
+    private static int TYPE_Footer = 3;
 
     public MainDataAdapter(Weather weather) {
         this.weatherData = weather;
@@ -67,12 +68,22 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public class FooterHolder extends RecyclerView.ViewHolder {
+        public FooterHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view;
-        if (viewType == TYPE_Today) {
+
+        if (viewType == TYPE_Footer) {
+            view = LayoutInflater.from(context).inflate(R.layout.mainrecyclerview_footer, parent, false);
+            return new FooterHolder(view);
+        } else if (viewType == TYPE_Today) {
             view = LayoutInflater.from(context).inflate(R.layout.mainrecyclerview_today, parent, false);
             return new ToDayViewHolder(view);
 
@@ -101,8 +112,8 @@ public class MainDataAdapter extends RecyclerView.Adapter {
                 ((ToDayViewHolder)holder).currentTempTextView.setText(String.valueOf(weatherData.getCurrentObservation().getCondition().getTemperature()) + "°F");
             }
 
-        } else {
-//            Log.d("position", String.valueOf(position));
+        } else if (position != weatherData.getForecasts().size() + 1)  {
+            Log.d("position", String.valueOf(position));
              if (weatherData.getForecasts() != null && position > 0) {
 
                  if (position == 1) {
@@ -135,7 +146,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         if (weatherData.getForecasts() != null) {
-            return weatherData.getForecasts().size() + 1;
+            return weatherData.getForecasts().size() + 2;
         } else {
             return 0;
         }
@@ -144,7 +155,10 @@ public class MainDataAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+
+        if (weatherData.getForecasts().size() + 1 == position) {
+            return  TYPE_Footer;
+        } else if (position == 0) {
             return TYPE_Today;
         } else {
             return TYPE_Forecast;
@@ -157,11 +171,6 @@ public class MainDataAdapter extends RecyclerView.Adapter {
 
         return value;
     }
-
-
-
-
-
 
 }
 

@@ -12,6 +12,7 @@
     <string name="menu_setting">Setting</string>
 
     //fragment_home.xml
+    <string name="yahoo">Yahoo Weather API</string>
     <string name="defaultHighLow">20-11°C</string>
     <string name="defaultDate">Jul 18</string>
     <string name="defaultWeekDay">Monday</string>
