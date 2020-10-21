@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.example.weathercard.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class SettingFragment extends Fragment {
@@ -54,6 +55,8 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        hiddenFloatingBtn();
+
         return root;
     }
 
@@ -72,6 +75,11 @@ public class SettingFragment extends Fragment {
         } else {
             return true;
         }
+    }
+
+    private void hiddenFloatingBtn() {
+        FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.floatingBtn);
+        floatingActionButton.setVisibility(View.INVISIBLE);
     }
 
 }

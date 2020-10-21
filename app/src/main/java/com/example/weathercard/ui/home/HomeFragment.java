@@ -31,6 +31,7 @@ import com.example.weathercard.APIData.Weather;
 import com.example.weathercard.MainDataAdapter;
 import com.example.weathercard.R;
 import com.example.weathercard.ui.utility.GpsTracker;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -69,6 +70,7 @@ public class HomeFragment extends Fragment {
         mainDataAdapter = new MainDataAdapter(weather);
         mainRecyclerView.setAdapter(mainDataAdapter);
 
+        showFloatingBtn();
         return root;
     }
 
@@ -244,4 +246,19 @@ public class HomeFragment extends Fragment {
         super.onPause();
         gpsTracker.stopUsingGPS();
     }
+
+    public void reloadData() {
+        if (!checkLocationServicesStatus()) {
+            showDialogForLocationService();
+        }else {
+            checkPermission();
+        }
+    }
+
+    private void showFloatingBtn() {
+        FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.floatingBtn);
+        floatingActionButton.setVisibility(View.VISIBLE);
+    }
+
+
 }
