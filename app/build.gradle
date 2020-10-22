@@ -75,5 +75,6 @@ dependencies {
     //oss
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
-
+    //spinkit
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

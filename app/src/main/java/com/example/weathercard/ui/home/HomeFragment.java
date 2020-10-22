@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,11 +27,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.weathercard.APIData.UserLocation;
 import com.example.weathercard.APIData.Weather;
 import com.example.weathercard.MainDataAdapter;
 import com.example.weathercard.R;
 import com.example.weathercard.ui.utility.GpsTracker;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -47,6 +49,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private Weather weather;
     private MainDataAdapter mainDataAdapter;
+    private Sprite wave;
+    private ProgressBar progressBar;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -71,6 +75,12 @@ public class HomeFragment extends Fragment {
         mainDataAdapter = new MainDataAdapter(weather);
         mainRecyclerView.setAdapter(mainDataAdapter);
 
+        mainRecyclerView.setVisibility(View.INVISIBLE);
+
+        progressBar = (ProgressBar) root.findViewById(R.id.progress);
+        wave = new Wave();
+        progressBar.setIndeterminateDrawable(wave);
+        wave.start();
         showFloatingBtn();
         return root;
     }
@@ -217,6 +227,9 @@ public class HomeFragment extends Fragment {
                     if (throwable == null) {
                         Log.d("Unit",getUnit());
                         Log.d("Success", String.valueOf(weather.getCurrentObservation().getCondition().getTemperature()));
+                        mainRecyclerView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        wave.stop();
                         mainDataAdapter.setWeather(weather);
                         mainDataAdapter.notifyDataSetChanged();
                     } else {
