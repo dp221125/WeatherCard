@@ -38,7 +38,7 @@ import io.reactivex.rxjava3.subjects.Subject;
 
 public class GpsTracker extends Service implements LocationListener {
     private final Context mContext;
-    Location location;
+    private Location location;
     double latitude;
     double longitude;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;

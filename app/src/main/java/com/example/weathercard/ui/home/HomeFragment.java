@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -46,7 +47,6 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private RecyclerView mainRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private Weather weather;
     private MainDataAdapter mainDataAdapter;
     private Sprite wave;
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
         mainRecyclerView = (RecyclerView) root.findViewById(R.id.mainRecyclerView);
         mainRecyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mainRecyclerView.setLayoutManager(layoutManager);
 
         mainDataAdapter = new MainDataAdapter(weather);
