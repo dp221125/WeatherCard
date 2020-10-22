@@ -1,5 +1,6 @@
 package com.example.weathercard;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
@@ -15,17 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weathercard.APIData.Weather;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 import java.util.Locale;
 
 public class MainDataAdapter extends RecyclerView.Adapter {
 
-    private Weather weatherData = null;
+    private Weather weatherData;
     private Context context;
 
-    private static int TYPE_Today = 1;
-    private static int TYPE_Forecast = 2;
-    private static int TYPE_Footer = 3;
+    private static final int TYPE_Today = 1;
+    private static final int TYPE_Footer = 3;
 
     public MainDataAdapter(Weather weather) {
         this.weatherData = weather;
@@ -36,7 +38,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
-    public class ForecastsViewHolder extends RecyclerView.ViewHolder {
+    public static class ForecastsViewHolder extends RecyclerView.ViewHolder {
         TextView weekTextView;
         TextView dateTextView;
         TextView tempTextView;
@@ -51,7 +53,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class ToDayViewHolder extends RecyclerView.ViewHolder {
+    public static class ToDayViewHolder extends RecyclerView.ViewHolder {
         TextView cityNameTextView;
         TextView regionTextView;
         TextView weatherStringTextView;
@@ -68,13 +70,14 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class FooterHolder extends RecyclerView.ViewHolder {
+    public static class FooterHolder extends RecyclerView.ViewHolder {
         public FooterHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
 
 
+    @NotNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -93,6 +96,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if ((getItemViewType(position) == TYPE_Today) && weatherData.getLocation() != null && weatherData.getCurrentObservation() != null) {
@@ -109,7 +113,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
             if (getUnit().equals("c")) {
                 ((ToDayViewHolder)holder).currentTempTextView.setText(String.valueOf(weatherData.getCurrentObservation().getCondition().getTemperature()) + "°C");
             } else {
-                ((ToDayViewHolder)holder).currentTempTextView.setText(String.valueOf(weatherData.getCurrentObservation().getCondition().getTemperature()) + "°F");
+                ((ToDayViewHolder)holder).currentTempTextView.setText(weatherData.getCurrentObservation().getCondition().getTemperature() + "°F");
             }
 
         } else if (position != weatherData.getForecasts().size() + 1)  {
@@ -134,7 +138,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
                  ImageAdapter imageAdapter = new ImageAdapter();
                  imageAdapter.loadImage(((ForecastsViewHolder) holder).weatherImageView, imageURL);
 
-                 long dv = Long.valueOf(weatherData.getForecasts().get(position -1).getDate())*1000;
+                 long dv = weatherData.getForecasts().get(position - 1).getDate() * 1000;
                  Date df = new java.util.Date(dv);
                  String vv = new SimpleDateFormat("MMM dd일", Locale.KOREA).format(df);
 
@@ -161,15 +165,14 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         } else if (position == 0) {
             return TYPE_Today;
         } else {
-            return TYPE_Forecast;
+            return 2;
         }
     }
 
     private String getUnit() {
         SharedPreferences prefs = context.getSharedPreferences("TempPref", Context.MODE_PRIVATE);
-        String value = prefs.getString("unitSwitch", "c");
 
-        return value;
+        return prefs.getString("unitSwitch", "c");
     }
 
 }

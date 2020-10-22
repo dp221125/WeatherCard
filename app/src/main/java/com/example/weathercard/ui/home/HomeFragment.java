@@ -3,7 +3,6 @@ package com.example.weathercard.ui.home;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,7 +45,6 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private RecyclerView mainRecyclerView;
-    private Weather weather;
     private MainDataAdapter mainDataAdapter;
     private Sprite wave;
     private ProgressBar progressBar;
@@ -64,7 +61,7 @@ public class HomeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        weather = new Weather();
+        Weather weather = new Weather();
 
         mainRecyclerView = (RecyclerView) root.findViewById(R.id.mainRecyclerView);
         mainRecyclerView.setHasFixedSize(true);
@@ -95,7 +92,7 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        if (!checkLocationServicesStatus()) {
+        if (checkLocationServicesStatus()) {
             showDialogForLocationService();
         }else {
             checkPermission();
@@ -113,14 +110,12 @@ public class HomeFragment extends Fragment {
 
     private String getUnit() {
         SharedPreferences prefs = getActivity().getSharedPreferences("TempPref", Context.MODE_PRIVATE);
-        String value = prefs.getString("unitSwitch", "c");
-
-        return value;
+        return prefs.getString("unitSwitch", "c");
     }
 
     private boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||  locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     private void showDialogForLocationService() {
@@ -128,24 +123,11 @@ public class HomeFragment extends Fragment {
         builder.setTitle("위치 서비스");
         builder.setMessage("앱의 정상적인 서비스를 위해서 위치서비스가 필요합니다. \n" + "위치 서비스를 켜주세요");
         builder.setCancelable(true);
-        builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent callGPSIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
-                startActivityForResult(callGPSIntent, GPS_ENABLE_REQUEST_CODE);
-            }
-
-        });
-
-        builder.setNeutralButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-
+        builder.setPositiveButton("설정", (dialogInterface, i) -> {
+            Intent callGPSIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+            startActivityForResult(callGPSIntent, GPS_ENABLE_REQUEST_CODE);
+        }).setNeutralButton("취소", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
-
     }
 
 
@@ -247,7 +229,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void reloadData() {
-        if (!checkLocationServicesStatus()) {
+        if (checkLocationServicesStatus()) {
             showDialogForLocationService();
         } else {
             checkPermission();
