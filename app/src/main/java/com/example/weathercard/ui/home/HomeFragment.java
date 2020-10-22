@@ -52,7 +52,8 @@ public class HomeFragment extends Fragment {
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
-    GpsTracker gpsTracker;
+    private GpsTracker gpsTracker;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -84,7 +85,6 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Log.d("onStart", "onStart");
         if (!checkLocationServicesStatus()) {
             showDialogForLocationService();
         }else {
@@ -132,7 +132,6 @@ public class HomeFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
             }
-
         });
 
         builder.create().show();
@@ -158,12 +157,8 @@ public class HomeFragment extends Fragment {
 
             gpsTracker  = new GpsTracker(getActivity());
             disposables.add(gpsTracker.locationMessage
-                    .subscribe( (location) -> {
-                        callFetchData(location);
-                    }));
-
+                    .subscribe(this::callFetchData));
         }
-
     }
 
     @Override
@@ -189,25 +184,17 @@ public class HomeFragment extends Fragment {
                 gpsTracker  = new GpsTracker(getActivity());
 
                 disposables.add(gpsTracker.locationMessage
-                        .subscribe( (location) -> {
-                            callFetchData(location);
-                        }));
-            }
-
-
-            else {
+                        .subscribe(this::callFetchData));
+            } else {
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[0])
                         || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_PERMISSIONS[1])) {
-
                     Toast.makeText(getActivity(), "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요.", Toast.LENGTH_LONG).show();
-                    callFetchData(null);
                 }else {
                     Toast.makeText(getActivity(), "퍼미션이 거부되었습니다. 설정(앱 정보)에서 퍼미션을 허용해야 합니다. ", Toast.LENGTH_LONG).show();
-                    callFetchData(null);
                 }
+                callFetchData(null);
             }
-
         }
     }
 
@@ -238,7 +225,6 @@ public class HomeFragment extends Fragment {
                         toast.show();
                     }
                 }));
-
     }
 
     @Override
@@ -250,7 +236,7 @@ public class HomeFragment extends Fragment {
     public void reloadData() {
         if (!checkLocationServicesStatus()) {
             showDialogForLocationService();
-        }else {
+        } else {
             checkPermission();
         }
     }
@@ -259,6 +245,5 @@ public class HomeFragment extends Fragment {
         FloatingActionButton floatingActionButton = (FloatingActionButton) getActivity().findViewById(R.id.floatingBtn);
         floatingActionButton.setVisibility(View.VISIBLE);
     }
-
 
 }

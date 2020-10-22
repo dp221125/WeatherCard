@@ -36,7 +36,6 @@ public class SettingFragment extends Fragment {
         Button btn = root.findViewById(R.id.showLicenseBtn);
 
         btn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), OssLicensesMenuActivity.class));
@@ -64,8 +63,6 @@ public class SettingFragment extends Fragment {
 
             }
         });
-
-
 
         hiddenFloatingBtn();
 
