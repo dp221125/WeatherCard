@@ -1,6 +1,5 @@
 package com.example.weathercard;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
@@ -18,16 +17,15 @@ import com.example.weathercard.APIData.Weather;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainDataAdapter extends RecyclerView.Adapter {
+
+public class MainDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Weather weatherData;
     private Context context;
-
-    private static final int TYPE_Today = 1;
-    private static final int TYPE_Footer = 3;
 
     public MainDataAdapter(Weather weather) {
         this.weatherData = weather;
@@ -37,7 +35,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         this.weatherData = weather;
     }
 
-    // 아이템 뷰를 저장하는 뷰홀더 클래스.
+    // ForecastCell
     public static class ForecastsViewHolder extends RecyclerView.ViewHolder {
         TextView weekTextView;
         TextView dateTextView;
@@ -53,6 +51,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
+    // ToDayCell
     public static class ToDayViewHolder extends RecyclerView.ViewHolder {
         TextView cityNameTextView;
         TextView regionTextView;
@@ -70,6 +69,7 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
+    // FooterCell
     public static class FooterHolder extends RecyclerView.ViewHolder {
         public FooterHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,10 +83,10 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         context = parent.getContext();
         View view;
 
-        if (viewType == TYPE_Footer) {
+        if (viewType == CellType.Footer.getCellNumber()) {
             view = LayoutInflater.from(context).inflate(R.layout.mainrecyclerview_footer, parent, false);
             return new FooterHolder(view);
-        } else if (viewType == TYPE_Today) {
+        } else if (viewType == CellType.ToDay.getCellNumber()) {
             view = LayoutInflater.from(context).inflate(R.layout.mainrecyclerview_today, parent, false);
             return new ToDayViewHolder(view);
 
@@ -96,10 +96,9 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if ((getItemViewType(position) == TYPE_Today) && weatherData.getLocation() != null && weatherData.getCurrentObservation() != null) {
+        if ((getItemViewType(position) == CellType.ToDay.getCellNumber()) && weatherData.getLocation() != null && weatherData.getCurrentObservation() != null) {
             ((ToDayViewHolder)holder).cityNameTextView.setText(weatherData.getLocation().getCity());
             ((ToDayViewHolder)holder).regionTextView.setText(weatherData.getLocation().getRegion());
             ((ToDayViewHolder)holder).weatherStringTextView.setText(weatherData.getCurrentObservation().getCondition().getText());
@@ -111,9 +110,9 @@ public class MainDataAdapter extends RecyclerView.Adapter {
             imageAdapter.loadImage(((ToDayViewHolder) holder).weatherImageView, imageURL);
 
             if (getUnit().equals("c")) {
-                ((ToDayViewHolder)holder).currentTempTextView.setText(String.valueOf(weatherData.getCurrentObservation().getCondition().getTemperature()) + "°C");
+                ((ToDayViewHolder)holder).currentTempTextView.setText(MessageFormat.format("{0}°C", weatherData.getCurrentObservation().getCondition().getTemperature()));
             } else {
-                ((ToDayViewHolder)holder).currentTempTextView.setText(weatherData.getCurrentObservation().getCondition().getTemperature() + "°F");
+                ((ToDayViewHolder)holder).currentTempTextView.setText(MessageFormat.format("{0}°F", weatherData.getCurrentObservation().getCondition().getTemperature()));
             }
 
         } else if (position != weatherData.getForecasts().size() + 1)  {
@@ -121,15 +120,15 @@ public class MainDataAdapter extends RecyclerView.Adapter {
              if (weatherData.getForecasts() != null && position > 0) {
 
                  if (position == 1) {
-                     ((ForecastsViewHolder) holder).weekTextView.setText("Today");
+                     ((ForecastsViewHolder) holder).weekTextView.setText(R.string.TodayTitle);
                  } else {
                      ((ForecastsViewHolder) holder).weekTextView.setText(weatherData.getForecasts().get(position - 1).getDay());
                  }
 
                  if (getUnit().equals("c")) {
-                     ((ForecastsViewHolder) holder).tempTextView.setText(String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()) + "-" + weatherData.getForecasts().get(position - 1).getLow() + "°C");
+                     ((ForecastsViewHolder) holder).tempTextView.setText(MessageFormat.format("{0}-{1}°C", String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()), weatherData.getForecasts().get(position - 1).getLow()));
                  } else {
-                     ((ForecastsViewHolder) holder).tempTextView.setText(String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()) + "-" + weatherData.getForecasts().get(position - 1).getLow() + "°F");
+                     ((ForecastsViewHolder) holder).tempTextView.setText(MessageFormat.format("{0}-{1}°F", String.valueOf(weatherData.getForecasts().get(position - 1).getHigh()), weatherData.getForecasts().get(position - 1).getLow()));
                  }
 
                  String imageURL = String.format("http://l.yimg.com/a/i/us/we/52/%s.gif", weatherData.getForecasts().get(position - 1).getCode());
@@ -154,18 +153,16 @@ public class MainDataAdapter extends RecyclerView.Adapter {
         } else {
             return 0;
         }
-
     }
 
     @Override
     public int getItemViewType(int position) {
-
         if (weatherData.getForecasts().size() + 1 == position) {
-            return  TYPE_Footer;
+            return CellType.Footer.getCellNumber();
         } else if (position == 0) {
-            return TYPE_Today;
+            return CellType.ToDay.getCellNumber();
         } else {
-            return 2;
+            return CellType.Forecast.getCellNumber();
         }
     }
 
